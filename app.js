@@ -3,10 +3,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
+const encrypt = require('mongoose-encryption');
 
 mongoose.connect('mongodb://localhost:27017/userDB', {useNewUrlParser: true});
 const Schema = mongoose.Schema;
 userSchema = new Schema({email:String, password:String});
+
+const secret = "Thisisoutlittlesecret.";
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ["password"]});
 
 const User = new mongoose.model('User', userSchema);
 
@@ -41,18 +45,18 @@ app.post('/register', (req, res)=>{
     password:password
   });
   user.save();
-  res.redirect('/login');
+  res.render('secrets');
 });
 
 app.post('/login', (req, res)=>{
   let username = req.body.username;
   let password = req.body.password;
 
-  User.findOne({email:username, password: password}, (err, result)=>{
+  User.findOne({email:username}, (err, result)=>{
     if(!err){
       if(!result){
-        console.log("Sorry no user found");
-        res.render('login');
+        console.log("no match");
+        res.render('/');
       }else{
         if( result.email === username && result.password === password){
           res.redirect('/secrets');
