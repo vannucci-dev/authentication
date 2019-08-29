@@ -1,4 +1,5 @@
 # authentication
 Authentication 101
 
-Crate a LVL 1 authentication process. Heavily breachable.
+Master Branch: Crate a LVL 1 authentication process. Heavily breachable.
+Level2 Branch: Added encryption to password on server side.
